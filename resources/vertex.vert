@@ -1,10 +1,11 @@
-#version 120
+#version 330 core 
 
-attribute vec3 p;
+// attribute vec3 p;
+in vec4 p;
 
 void main()
 {
 	
-	gl_Position = vec4(p, 1);
+	gl_Position = p;
 
 }

@@ -100,7 +100,7 @@ void GLAPIENTRY glDebugOutput(GLenum source,
     };
 }
 
-GLFWwindow* initialize_window(int versionMajor, int versionMinor, bool enableDebug = false) {
+GLFWwindow* initialize_window(int versionMajor, int versionMinor, bool core = true, bool enableDebug = false) {
     glfwSetErrorCallback(&glfwError);
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -109,7 +109,7 @@ GLFWwindow* initialize_window(int versionMajor, int versionMinor, bool enableDeb
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor);
-    if (versionMajor >= 3) {
+    if (versionMajor >= 3 && core) {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     }

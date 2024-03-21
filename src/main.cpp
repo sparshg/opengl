@@ -2,20 +2,40 @@
 #include <windowSetup.h>
 
 #include <GLFW/glfw3.h>
+#include <demoShader.h>
 #include <iostream>
 
 int main() {
-    GLFWwindow* window = initialize_window(2, 1, true);
+    GLFWwindow* window = initialize_window(4, 1, true, true);
+    float vertices[] = {
+        0.5f, 0.5f, 0.0f,   // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, // bottom left
+    };
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // GLuint VAO;
+    // glGenVertexArrays(1, &VAO);
+    // glBindVertexArray(VAO);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // glBindVertexArray(0);
+
+    Shader s;
+    s.loadShaderProgramFromFile(RESOURCES_PATH "vertex.vert", RESOURCES_PATH "fragment.frag");
+    s.bind();
 
     while (!glfwWindowShouldClose(window)) {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBegin(GL_TRIANGLES);
-        glVertex2f(0, 1);
-        glVertex2f(1, -1);
-        glVertex2f(-1, -1);
-        glEnd();
+        // glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
