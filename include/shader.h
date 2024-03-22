@@ -12,5 +12,3 @@ struct Shader {
 
     GLint getUniform(const char* name);
 };
-
-GLint getUniform(GLuint shaderId, const char* name);

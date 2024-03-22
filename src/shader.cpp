@@ -130,11 +130,7 @@ void Shader::clear() {
 }
 
 GLint Shader::getUniform(const char* name) {
-    return ::getUniform(this->id, name);
-}
-
-GLint getUniform(GLuint shaderId, const char* name) {
-    GLint uniform = glGetUniformLocation(shaderId, name);
+    GLint uniform = glGetUniformLocation(this->id, name);
     if (uniform == -1) {
         std::cout << "uniform error " + std::string(name);
     }

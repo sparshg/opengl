@@ -10,9 +10,38 @@ int main() {
     clearErrors();
 
     float vertices[] = {
-        0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f};
+        1.0f,
+        -1.0f,
+        1.0f,
+        0.0f,
+        0.0f,
+        -1.0f,
+        -1.0f,
+        0.0f,
+        1.0f,
+        0.0f,
+        1.0f,
+        1.0f,
+        0.0f,
+        0.0f,
+        1.0f,
+        1.0f,
+        1.0f,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1.0f,
+        -1.0f,
+        0.0f,
+        0.0f,
+        0.0f,
+        -1.0f,
+        1.0f,
+        0.0f,
+        0.0f,
+        0.0f,
+
+    };
 
     GLuint VBO;
     glGenBuffers(1, &VBO);
@@ -24,14 +53,18 @@ int main() {
     glBindVertexArray(VAO);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    // glEnableVertexAttribArray(1);
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
     // glBindVertexArray(0);
 
     Shader s;
     s.loadShaderProgram(RESOURCES_PATH "vertex.vert", RESOURCES_PATH "fragment.frag");
     s.bind();
+
+    GLint timeLocation = s.getUniform("u_Time");
+    glUniform1f(timeLocation, 0.0f);
+    double offset = glfwGetTime();
 
     getErrors();
     while (!glfwWindowShouldClose(window)) {
@@ -39,8 +72,10 @@ int main() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glUniform1f(timeLocation, glfwGetTime() - offset);
+
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
