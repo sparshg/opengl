@@ -21,14 +21,14 @@ int main() {
     // clang-format off
     float vertices[] = {
         // x, y, z, r, g, b
-        1.0f, -1.0f, 1.0f,   1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, 1.0f,  1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f,
-        1.0f, -1.0f, -1.0f,   0.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, -1.0f,    0.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, -1.0f,   1.0f, 1.0f, 0.0f,
+        1.0f, -1.0f, 1.0f,   0.95f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,  0.95f, 0.95f, 0.0f,
+        1.0f, 1.0f, 1.0f,    0.0f, 0.95f, 0.0f,
+        -1.0f, 1.0f, 1.0f,   0.0f, 0.8f, 0.95f,
+        1.0f, -1.0f, -1.0f,   0.0f, 0.0f, 0.95f,
+        -1.0f, -1.0f, -1.0f,  0.0f, 0.8f, 0.95f,
+        1.0f, 1.0f, -1.0f,    0.0f, 0.95f, 0.0f,
+        -1.0f, 1.0f, -1.0f,   0.95f, 0.95f, 0.0f,
     };
     GLuint indices[] = {
         0, 1, 2,
@@ -70,8 +70,7 @@ int main() {
 
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, 0.1f, 30.0f);
     glUniformMatrix4fv(s.getUniform("u_Projection"), 1, GL_FALSE, &projection[0][0]);
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f)) *
-                      glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
     glUniformMatrix4fv(s.getUniform("u_Model"), 1, GL_FALSE, &model[0][0]);
 
     getErrors();
@@ -80,8 +79,10 @@ int main() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f)) *
-                glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f)) *
+                glm::rotate(glm::mat4(1.0f), 2.0f * (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f)) *
+                glm::rotate(glm::mat4(1.0f), 4.0f * (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f)) *
+                glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
         glUniformMatrix4fv(s.getUniform("u_Model"), 1, GL_FALSE, &model[0][0]);
 
         glBindVertexArray(VAO);
