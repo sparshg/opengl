@@ -20,10 +20,10 @@ int main() {
     // clang-format off
     float vertices[] = {
         // x, y, z, r, g, b
-        1.0f, -1.0f, 2.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, 2.0f, 1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 8.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, 8.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, -2.0f, 1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, -2.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, -8.0f, 1.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, -8.0f, 1.0f, 0.0f, 0.0f,
     };
     GLuint indices[] = {
         0, 1, 2,
@@ -65,21 +65,29 @@ int main() {
         glm::mat4 perspective_matrix = glm::transpose(glm::mat4x4(
             n, 0, 0, 0,
             0, n, 0, 0,
-            0, 0, n + f, -f * n,
-            0, 0, 1, 0));
+            0, 0, n + f, f * n,
+            0, 0, -1, 0));
         glm::mat4 orthographic_projection_matrix = glm::transpose(glm::mat4x4(
             2 / (r - l), 0, 0, -(r + l) / (r - l),
             0, 2 / (t - b), 0, -(t + b) / (t - b),
-            0, 0, 2 / (f - n), -(f + n) / (f - n),
+            0, 0, -2 / (f - n), -(f + n) / (f - n),
             0, 0, 0, 1));
         projection = orthographic_projection_matrix * perspective_matrix;
-        // projection = glm::perspective(glm::degrees(tanhf(t / n)), (r - l) / (t - b), n, f);
+        //  = glm::transpose(glm::mat4x4(
+        //     2 * n / (r - l), 0, (r + l) / (r - l), 0,
+        //     0, 2 * n / (t - b), (t + b) / (t - b), 0,
+        //     0, 0, -(f + n) / (f - n), -2 * f * n / (f - n),
+        //     0, 0, -1, 0));
+
+        // projection = glm::perspective(glm::radians(90.0f), 1.0f, n, f);
+        // projection = perspective_matrix;
+        std::cout << projection << "\n";
     }
 
     std::cout << "\n";
 
-    printv(projection * glm::vec4(1.0f, -1.0f, 2.0f, 1.0f));
-    printv(projection * glm::vec4(1.0f, 1.0f, 8.0f, 1.0f));
+    printv(projection * glm::vec4(1.0f, -1.0f, -2.0f, 1.0f));
+    printv(projection * glm::vec4(1.0f, 1.0f, -8.0f, 1.0f));
 
     glUniformMatrix4fv(s.getUniform("u_Projection"), 1, GL_FALSE, &projection[0][0]);
 
