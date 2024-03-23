@@ -17,17 +17,32 @@ void printv(glm::vec4 v) {
 int main() {
     GLFWwindow* window = initialize_window(4, 1, true, true);
     clearErrors();
+    glEnable(GL_DEPTH_TEST);
     // clang-format off
     float vertices[] = {
         // x, y, z, r, g, b
-        1.0f, -1.0f, -2.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, -2.0f, 1.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, -8.0f, 1.0f, 0.0f, 0.0f,
-        -1.0f, 1.0f, -8.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 1.0f,   1.0f, 0.0f, 0.0f,
+        -1.0f, -1.0f, 1.0f,  1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 1.0f,   0.0f, 1.0f, 1.0f,
+        1.0f, -1.0f, -1.0f,   0.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, -1.0f,  0.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, -1.0f,    0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, -1.0f,   1.0f, 1.0f, 0.0f,
     };
     GLuint indices[] = {
         0, 1, 2,
         2, 1, 3,
+        4, 5, 6,
+        6, 5, 7,
+        0, 2, 4,
+        4, 2, 6,
+        1, 0, 5,
+        5, 0, 4,
+        2, 3, 6,
+        6, 3, 7,
+        3, 1, 7,
+        7, 1, 5,
     };
     // clang-format on
     GLuint VAO;
@@ -48,59 +63,29 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glBindVertexArray(0);
 
     Shader s;
     s.loadShaderProgram(RESOURCES_PATH "vertex.vert", RESOURCES_PATH "fragment.frag");
     s.bind();
 
-    GLint timeLocation = s.getUniform("u_Time");
-    glUniform1f(timeLocation, 0.4f);
-    double offset = glfwGetTime();
-
-    glm::mat4 projection;
-    {
-        float n = 1.0f, f = 10.0f;
-        float l = -1.0f, r = 1.0f, b = -1.0f, t = 1.0f;
-        glm::mat4 perspective_matrix = glm::transpose(glm::mat4x4(
-            n, 0, 0, 0,
-            0, n, 0, 0,
-            0, 0, n + f, f * n,
-            0, 0, -1, 0));
-        glm::mat4 orthographic_projection_matrix = glm::transpose(glm::mat4x4(
-            2 / (r - l), 0, 0, -(r + l) / (r - l),
-            0, 2 / (t - b), 0, -(t + b) / (t - b),
-            0, 0, -2 / (f - n), -(f + n) / (f - n),
-            0, 0, 0, 1));
-        projection = orthographic_projection_matrix * perspective_matrix;
-        //  = glm::transpose(glm::mat4x4(
-        //     2 * n / (r - l), 0, (r + l) / (r - l), 0,
-        //     0, 2 * n / (t - b), (t + b) / (t - b), 0,
-        //     0, 0, -(f + n) / (f - n), -2 * f * n / (f - n),
-        //     0, 0, -1, 0));
-
-        // projection = glm::perspective(glm::radians(90.0f), 1.0f, n, f);
-        // projection = perspective_matrix;
-        std::cout << projection << "\n";
-    }
-
-    std::cout << "\n";
-
-    printv(projection * glm::vec4(1.0f, -1.0f, -2.0f, 1.0f));
-    printv(projection * glm::vec4(1.0f, 1.0f, -8.0f, 1.0f));
-
+    glm::mat4 projection = glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, 0.1f, 30.0f);
     glUniformMatrix4fv(s.getUniform("u_Projection"), 1, GL_FALSE, &projection[0][0]);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f)) *
+                      glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glUniformMatrix4fv(s.getUniform("u_Model"), 1, GL_FALSE, &model[0][0]);
 
     getErrors();
     while (!glfwWindowShouldClose(window)) {
         clearErrors();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUniform1f(timeLocation, glfwGetTime() - offset + 0.4f);
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f)) *
+                glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        glUniformMatrix4fv(s.getUniform("u_Model"), 1, GL_FALSE, &model[0][0]);
 
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
