@@ -1,11 +1,8 @@
 #version 330 core 
 
-// attribute vec3 p;
-in vec4 p;
+layout(location = 0) in vec3 pos;
 
 void main()
 {
-	
-	gl_Position = p;
-
+	gl_Position = vec4(pos, 1.0f);
 }
