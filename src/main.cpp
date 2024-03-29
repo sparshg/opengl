@@ -8,18 +8,6 @@
 int main() {
     GLFWwindow* window = initialize_window(4, 1, true, true);
     // clang-format off
-    float vertices[] = {
-        0.5f, 0.5f,   // 0
-        0.5f, -0.5f,  // 1
-        -0.5f, -0.5f, // 2
-        -0.5f, 0.5f,  // 3
-    };
-
-     GLuint indices[] = {
-         0, 1, 2,
-         2, 0, 3,
-     };
-     
      float vertices[] = {
          // x, y, z, r, g, b
          1.0f, -1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
