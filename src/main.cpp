@@ -9,9 +9,10 @@ int main() {
     GLFWwindow* window = initialize_window(4, 1, true, true);
 
     float vertices[] = {
-        0.5f, 0.5f, 0.0f,   // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, // bottom left
+        //------pos------|----ab----|
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f,   // top right
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, // bottom left
     };
 
     GLuint VAO;
@@ -24,8 +25,10 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0); // attribute 0
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1); // attribute 1
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     //     attribute number, size, type, normalized, stride, offset
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
     Shader s;
     s.loadShaderProgram(RESOURCES_PATH "vertex.vert", RESOURCES_PATH "fragment.frag");
