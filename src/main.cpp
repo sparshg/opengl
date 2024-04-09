@@ -70,6 +70,12 @@ int main() {
 
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), 4.0f / 3.0f, 0.1f, 30.0f);
     glUniformMatrix4fv(s.getUniform("u_Projection"), 1, GL_FALSE, &projection[0][0]);
+
+    // Place the camera at x = 10.0
+    // Same as translating everything by -10.0
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-10.0f, 0.0f, 0.0f));
+    glUniformMatrix4fv(s.getUniform("u_View"), 1, GL_FALSE, &view[0][0]);
+
     glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -5.0f));
     glUniformMatrix4fv(s.getUniform("u_Model"), 1, GL_FALSE, &model[0][0]);
 
