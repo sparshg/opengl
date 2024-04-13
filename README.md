@@ -4,12 +4,13 @@
 
 - Install [MSYS2](https://www.msys2.org/) to get GCC and other C++ tools. Once installed enter following command in the UCRT64 terminal that pops up after installation.
     
-    (or open it from *C:\msys64\ucrt64.exe* if you closed it)
+    (If you already have msys2 installed, or if you closed the popup, open UCRT64 terminal from `C:\msys64\ucrt64.exe`)
 
     `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain  mingw-w64-x86_64-cmake`
 
     Press enter twice to confirm and install required packages
 
+    You should now have `cmake` file in `C:\msys64\mingw64\bin\` directory
 
 - Install [Git](https://git-scm.com/download/win)
 
