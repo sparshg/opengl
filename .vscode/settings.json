@@ -58,6 +58,7 @@
         "vector": "cpp",
         "algorithm": "cpp"
     },
+    "cmake.cmakePath": "C:\\msys64\\mingw64\\bin\\cmake",
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.clang_format_fallbackStyle": "{ IndentWidth: 4, ColumnLimit: 0, PointerAlignment: Left}",
 }
