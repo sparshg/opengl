@@ -18,7 +18,7 @@
 
 - Install dependencies
 
-    `sudo apt install git build-essential cmake pkg-config mesa-utils libglu1-mesa-dev mesa-common-dev`
+    `sudo apt install git build-essential cmake libgl1-mesa-dev mesa-utils libglu1-mesa-dev mesa-common-dev xorg-dev`
 
 ## Step 1: Mac (UNTESTED)
 
